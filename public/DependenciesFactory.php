@@ -19,7 +19,7 @@ class DependenciesFactory
         $earlist = 'earliest';
 
         $kafka = new ConsumerKafka($key, $host, $groupId, $group, $auto, $earlist);
-        $kafka->consumer();
+        $consumer = $kafka->consumer();
 
         $app = AppFactory::create();
 
@@ -31,7 +31,8 @@ class DependenciesFactory
 
         return $dependence = [ 
             'app'      => $app,
-            'consumer' => $kafka
+            'kafka' => $kafka,
+            'consumer' => $consumer
         ];
     }
 }
