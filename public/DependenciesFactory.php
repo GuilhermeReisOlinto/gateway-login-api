@@ -25,7 +25,7 @@ class DependenciesFactory
 
         $jwtHandler = new HandlerTokenJwt();
         $app->add(new MiddlewareToken($jwtHandler));
-     
+
         $routes = new RoutesApplication();
         $routes->routes($app);
 
