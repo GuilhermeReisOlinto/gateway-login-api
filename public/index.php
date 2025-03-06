@@ -4,7 +4,6 @@ require __DIR__ . "/../vendor/autoload.php";
 require __DIR__ . "/DependenciesFactory.php";
 
 use Swoole\Http\Server;
-use Swoole\Http\Server;
 use Swoole\Http\Request as SwooleRequest;
 use Swoole\Http\Response as SwooleResponse;
 

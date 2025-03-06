@@ -1,10 +1,10 @@
 <?php
 
 require __DIR__ . "/RoutesApplication.php";
+require __DIR__ . "/ConsumerKafka.php";
 
 use App\Authentication\HandlerTokenJwt;
 use App\Authentication\MiddlewareToken;
-use Slim\App;
 use Slim\Factory\AppFactory;
 
 class DependenciesFactory 
