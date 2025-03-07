@@ -6,6 +6,13 @@ require __DIR__ . "/DependenciesFactory.php";
 use Swoole\Http\Server;
 use Swoole\Http\Request as SwooleRequest;
 use Swoole\Http\Response as SwooleResponse;
+use Swoole\Coroutine;
+use GuzzleHttp\Psr7\ServerRequest;
+use Slim\Factory\AppFactory;
+use GuzzleHttp\Psr7\Response;
+
+AppFactory::setResponseFactory(new \GuzzleHttp\Psr7\HttpFactory());
+AppFactory::setStreamFactory(new \GuzzleHttp\Psr7\HttpFactory());
 
 $dependence = DependenciesFactory::create();
 
@@ -19,7 +26,8 @@ $server->on('start', function (Server $server) {
 });
 
 $server->on('request', function (SwooleRequest $swooleRequest, SwooleResponse $swooleResponse) use ($app) {
-    $request = \GuzzleHttp\Psr7\ServerRequest::fromGlobals();
+    $request = ServerRequest::fromGlobals();
+
     $response = $app->handle($request);
 
     foreach ($response->getHeaders() as $name => $values) {
@@ -33,13 +41,18 @@ $server->on('workerStart', function (Server $server, int $workerId) use ($consum
     echo "Worker $workerId iniciado\n";
 
     if ($workerId === 0) {
-        while (true) {
-            $message = $consumer->consume(1000); 
-                        
-            if ($message->err === RD_KAFKA_RESP_ERR_NO_ERROR) {
-                echo "Mensagem recebida: " . $message->payload . "\n";
+
+        Coroutine::create(function () use ($consumer) {
+            while (true) {
+                $message = $consumer->consume(100);
+
+                if ($message->err === RD_KAFKA_RESP_ERR_NO_ERROR) {
+                    echo "Mensagem recebida: " . $message->payload . "\n";
+                }
+
+                Coroutine::sleep(0.01);
             }
-        }
+        });
     }
 });
 
