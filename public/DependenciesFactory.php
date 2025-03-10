@@ -69,7 +69,7 @@ class DependenciesFactory
         
                 Coroutine::create(function () use ($consumer) {
                     while (true) {
-                        $message = $consumer->consume(100);
+                        $message = $consumer->consume(1000);
         
                         if ($message->err === RD_KAFKA_RESP_ERR_NO_ERROR) {
                             echo "Mensagem recebida: " . $message->payload . "\n";
