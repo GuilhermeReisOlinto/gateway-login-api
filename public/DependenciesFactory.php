@@ -5,6 +5,7 @@ require __DIR__ . "/ConsumerKafka.php";
 
 use App\Authentication\HandlerTokenJwt;
 use App\Authentication\MiddlewareToken;
+use App\Redis\RedisConnections;
 use Slim\Factory\AppFactory;
 use Swoole\Http\Server;
 use Swoole\Http\Request as SwooleRequest;
@@ -70,9 +71,12 @@ class DependenciesFactory
                 Coroutine::create(function () use ($consumer) {
                     while (true) {
                         $message = $consumer->consume(1000);
-        
+                        
                         if ($message->err === RD_KAFKA_RESP_ERR_NO_ERROR) {
                             echo "Mensagem recebida: " . $message->payload . "\n";
+
+                            $redis = new RedisConnections("127.0.0.1", 6379);
+                            $redis->send("kafka", $message->payload);
                         }
                         
                         Coroutine::sleep(0.01);
