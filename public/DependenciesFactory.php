@@ -75,8 +75,11 @@ class DependenciesFactory
                         if ($message->err === RD_KAFKA_RESP_ERR_NO_ERROR) {
                             echo "Mensagem recebida: " . $message->payload . "\n";
 
+                            $HandleToken = new HandlerTokenJwt();
+                            $token = $HandleToken->generateToken($message->payload);
+
                             $redis = new RedisConnections("127.0.0.1", 6379);
-                            $redis->send("kafka", $message->payload);
+                            $redis->send("kafka", $token);
                         }
                         
                         Coroutine::sleep(0.01);
