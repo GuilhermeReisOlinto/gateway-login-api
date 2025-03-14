@@ -3,9 +3,7 @@
 require __DIR__ . "/../vendor/autoload.php";
 require __DIR__ . "/DependenciesFactory.php";
 
-
 use Slim\Factory\AppFactory;
-use GuzzleHttp\Psr7\Response;
 
 AppFactory::setResponseFactory(new \GuzzleHttp\Psr7\HttpFactory());
 AppFactory::setStreamFactory(new \GuzzleHttp\Psr7\HttpFactory());
